@@ -1,6 +1,6 @@
 <template>
     <h1>NPV Calculator Dashboard</h1>
-    <NPVForm/>
+    <NPVForm @npv-result="receiveNPVResultFromForm"/>
     <button @click="handleClick">Click Me</button>
 </template>
 
@@ -11,7 +11,10 @@ export default{
     name: 'NPVCalculatorDashboard',
     components: { NPVForm },
     setup(){
-        
+        const receiveNPVResultFromForm = (data) => {
+            console.log('emit reached here')
+            console.log(data); //Data from the child
+        }
     }
 }
 </script>

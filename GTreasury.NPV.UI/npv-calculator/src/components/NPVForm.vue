@@ -19,40 +19,40 @@
   </form>
 </template>
 
-<script>
-import { reactive } from 'vue'
+<script setup>
+const emit = defineEmits(['npv-result'])
+import { reactive, defineEmits } from 'vue'
 
-export default {
-  name: 'NPVForm',
-  props: {
-    msg: String
-  },
-  setup() {
-      const form = reactive({
-        lowerBoundDiscountPercentage: 0,
-        upperBoundDiscountPercentage: 0,
-        incrementalPercentage: 0,
-        years: 0,
-        initialInvestment: 0,
-        annualCashFlows: []
-      })
-
+    const form = reactive({
+      lowerBoundDiscountPercentage: 0,
+      upperBoundDiscountPercentage: 0,
+      incrementalPercentage: 0,
+      years: 0,
+      initialInvestment: 0,
+      annualCashFlows: []
+    })
+    
     const handleSubmit = async () => {
       form.annualCashFlows = form.annualCashFlows.filter(Number);
-      await fetch('https://localhost:7239/NetPresentValue', {
-        method: 'POST',
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(form)
-      })
+      try {
+        const res = await fetch('https://localhost:7239/NetPresentValue', {
+          method: 'POST',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(form)
+        })
+        if (!res) {
+          console.error(res);
+        }
+        console.log('before emit')
+        emit('npv-result', res)
+        console.log('emitting here')
+      } catch (err) {
+        console.error(err);
+      }
     }
-
-
-    return { form, handleSubmit }
-  }
-}
 </script>
 
 <style>
