@@ -1,0 +1,6 @@
+@GTreasury.NPV.API_HostAddress = http://localhost:5083
+
+GET {{GTreasury.NPV.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
