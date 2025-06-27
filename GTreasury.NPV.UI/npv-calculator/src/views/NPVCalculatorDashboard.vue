@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import NPVForm from '../components/NPVForm.vue'
 import NPVChart from '../components/NPVChart.vue'
 
@@ -27,19 +27,26 @@ const receiveNPVResultFromForm = (data) => {
 }
 
 function arrangeChartData(presentValues) {
-    let dataObjects = []
-    let obj = null
-    let i = 0
-    while (i < presentValues.length) {
-        obj = {}
-        obj['presentValue'] = presentValues[i]
-        obj['year'] = ++i
-        dataObjects.push(obj)
+    const chartData = {
+        labels: [],
+        datasets: [
+            {
+                label: 'Present Value',
+                backgroundColor: '#f87979',
+                data: []
+            }
+        ]
     }
-    return dataObjects
+    chartData.datasets[0].data = presentValues
+    for (let i = 1; i <= presentValues.length;) {
+        chartData.labels.push(`Year ${i++}`)
+    }
+    return chartData
 }
 
-const forceRerender = () => {
+async function forceRerender() {
+    await nextTick()
+    console.log(chartResults.arrangedChartData)
     renderKey.value += 1;
 }
 </script>

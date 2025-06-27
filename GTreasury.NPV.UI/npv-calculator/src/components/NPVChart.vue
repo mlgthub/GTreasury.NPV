@@ -1,17 +1,5 @@
 <template>
-    <Chart
-        v-if="netPresentValueResults.arrangedChartData"
-        :size="{ width: 500, height: 400 }"
-        :data="chartData"
-        :margin="margin"
-        :direction="direction">
-
-        <template #layers>
-            <Grid strokeDasharray="2,2" />
-            <Line :dataKeys="['year', 'presentValue']" />
-        </template>
-
-    </Chart>
+    <Line :data="netPresentValueResults.arrangedChartData" :options="options" />
     <div>
         <label>Total Cash Inflow:</label>
         <p> {{ netPresentValueResults.totalCashInflow }} </p>
@@ -20,28 +8,41 @@
         <label>Net Present Value:</label>
         <p> {{ netPresentValueResults.netPresentValue }} </p>
     </div>
-    <svg-icon is="search"></svg-icon>
-<svg-icon is="hamburger" color="green"></svg-icon>
-<svg-icon is="notification" color="blue"></svg-icon>
 </template>
 
 <script setup>
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
 import { ref, defineProps, computed } from 'vue'
-import { Chart, Grid, Line } from 'vue3-charts'
+import { Line } from 'vue-chartjs'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
 
 const props = defineProps({
     netPresentValueResults: {
         type: Object
     }
 })
-console.log(props.netPresentValueResults.arrangedChartData)
-const direction = ref('horizontal')
-const margin = ref({
-    left: 0,
-    top: 20,
-    right: 20,
-    bottom: 0
-})
+
+const options = {
+    responsive: false
+}
 
 </script>
 
