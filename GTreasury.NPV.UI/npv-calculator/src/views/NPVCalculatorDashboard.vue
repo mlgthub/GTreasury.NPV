@@ -1,24 +1,89 @@
 <template>
     <h1>NPV Calculator Dashboard</h1>
-    <NPVForm @npv-result="receiveNPVResultFromForm"/>
-    <button @click="handleClick">Click Me</button>
+    <div class="dashboard">
+        <NPVForm @npv-result="receiveNPVResultFromForm" id="npvForm"/>
+        <NPVChart
+            v-if="renderKey"
+            :key="renderKey"
+            @npv-result="receiveNPVResultFromForm"
+            id="npvChart"
+            :netPresentValueResults="chartResults"
+        />
+    </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
 import NPVForm from '../components/NPVForm.vue'
+import NPVChart from '../components/NPVChart.vue'
 
-export default{
-    name: 'NPVCalculatorDashboard',
-    components: { NPVForm },
-    setup(){
-        const receiveNPVResultFromForm = (data) => {
-            console.log('emit reached here')
-            console.log(data); //Data from the child
-        }
+let chartResults
+const renderKey = ref(0)
+
+const receiveNPVResultFromForm = (data) => {
+    chartResults = data
+    chartResults.arrangedChartData = arrangeChartData(data.presentValues)
+    forceRerender();
+}
+
+function arrangeChartData(presentValues) {
+    let dataObjects = []
+    let obj = null
+    let i = 0
+    while (i < presentValues.length) {
+        obj = {}
+        obj['presentValue'] = presentValues[i]
+        obj['year'] = ++i
+        dataObjects.push(obj)
     }
+    return dataObjects
+}
+
+const forceRerender = () => {
+    renderKey.value += 1;
 }
 </script>
 
 <style>
-
+    #npvForm {
+        width: 30%;
+        display: inline-block;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    #npvChart {
+        width: 45%;
+        display: inline-block;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+  label {
+    display: inline-block;
+    margin-top: 20px;
+    position: relative;
+    font-size: 20px;
+    color: white;
+    margin-bottom: 10px;
+  }
+  label::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #32b910;
+    position: absolute;
+    z-index: -1;
+    padding-right: 30px;
+    left: -30px;
+    transform: rotateZ(-1.5deg);
+  }
+  button {
+    display: block;
+    margin-top: 30px;
+    background: #ff8800;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 18px
+  }
 </style>

@@ -1,61 +1,57 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <label>Initial Investment:</label>
-    <input v-model="form.initialInvestment" type="number" required>
+    <input v-model="form.initialInvestment" type="number" min="1" required>
     <label>Lower Bound Discount Rate:</label>
-    <input v-model="form.lowerBoundDiscountPercentage" type="number" required>
+    <input v-model="form.lowerBoundDiscountPercentage" type="number" min="0" max="100" required>
     <label>Upper Bound Discount Rate:</label>
-    <input v-model="form.upperBoundDiscountPercentage" type="number" required>
+    <input v-model="form.upperBoundDiscountPercentage" type="number" min="0" max="100" required>
     <label>Discount Rate Increment:</label>
-    <input v-model="form.incrementalPercentage" type="number" required>
+    <input v-model="form.incrementalPercentage" type="number" min="0" max="100" required>
     <label>Years:</label>
-    <input v-model="form.years" type="number" required>
+    <input v-model="form.years" type="number" min="1" required>
     <label>Predicted Cash Flows:</label>
     <div v-for="index in form.years" :key="index" class="years">
       <label>Year {{ index }}</label>
-      <input v-model="form.annualCashFlows[index]" type="number" class="yearInput" required>
+      <input v-model="form.annualCashFlows[index]" type="number" min="1" class="yearInput" required>
     </div>
     <button>Calculate Net Present Value</button>
   </form>
 </template>
 
 <script setup>
-const emit = defineEmits(['npv-result'])
 import { reactive, defineEmits } from 'vue'
 
-    const form = reactive({
-      lowerBoundDiscountPercentage: 0,
-      upperBoundDiscountPercentage: 0,
-      incrementalPercentage: 0,
-      years: 0,
-      initialInvestment: 0,
-      annualCashFlows: []
-    })
-    
-    const handleSubmit = async () => {
-      form.annualCashFlows = form.annualCashFlows.filter(Number);
-      try {
-        const res = await fetch('https://localhost:7239/NetPresentValue', {
-          method: 'POST',
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(form)
-        })
-        if (!res) {
-          console.error(res);
-        }
-        console.log('before emit')
-        emit('npv-result', res)
-        console.log('emitting here')
-      } catch (err) {
-        console.error(err);
-      }
-    }
+const emits = defineEmits(['npvResult'])
+
+const form = reactive({
+  lowerBoundDiscountPercentage: 0,
+  upperBoundDiscountPercentage: 0,
+  incrementalPercentage: 0,
+  years: 0,
+  initialInvestment: 0,
+  annualCashFlows: []
+})
+
+const handleSubmit = async () => {
+  form.annualCashFlows = form.annualCashFlows.filter(Number);
+  try {
+    await fetch('https://localhost:7239/NetPresentValue', {
+      method: 'POST',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(form)
+    }).then(res => res.json())
+      .then(data => emits('npvResult', data))
+  } catch (err) {
+    console.error(err);
+  }
+}
 </script>
 
-<style>
+<style scoped>
   form {
     max-width: 480px;
     margin: 0 auto;
@@ -71,35 +67,6 @@ import { reactive, defineEmits } from 'vue'
   }
   textarea {
     height: 160px;
-  }
-  label {
-    display: inline-block;
-    margin-top: 30px;
-    position: relative;
-    font-size: 20px;
-    color: white;
-    margin-bottom: 10px;
-  }
-  label::before {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: #32b910;
-    position: absolute;
-    z-index: -1;
-    padding-right: 40px;
-    left: -30px;
-    transform: rotateZ(-1.5deg);
-  }
-  button {
-    display: block;
-    margin-top: 30px;
-    background: #ff8800;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    font-size: 18px
   }
   .years {
     display: block;

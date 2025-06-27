@@ -1,59 +1,51 @@
 <template>
-    <div class="multipleValues">
-        <label>Present Values:</label>
-        <div class="cashInFlows">
-            <div v-for="presentValue in netPresentValueResults.PresentValues">
-                <p> {{ presentValue }} </p>
-            </div>
-        </div>
-    </div>
-    <div class = "singleValue">
+    <Chart
+        v-if="netPresentValueResults.arrangedChartData"
+        :size="{ width: 500, height: 400 }"
+        :data="chartData"
+        :margin="margin"
+        :direction="direction">
+
+        <template #layers>
+            <Grid strokeDasharray="2,2" />
+            <Line :dataKeys="['year', 'presentValue']" />
+        </template>
+
+    </Chart>
+    <div>
         <label>Total Cash Inflow:</label>
-        <p> {{ netPresentValueResults.TotalCashInflow }} </p>
+        <p> {{ netPresentValueResults.totalCashInflow }} </p>
     </div>
-    <div class = "singleValue">
+    <div>
         <label>Net Present Value:</label>
-        <p> {{ netPresentValueResults.NetPresentValue }} </p>
+        <p> {{ netPresentValueResults.netPresentValue }} </p>
     </div>
+    <svg-icon is="search"></svg-icon>
+<svg-icon is="hamburger" color="green"></svg-icon>
+<svg-icon is="notification" color="blue"></svg-icon>
 </template>
 
-<script>
-import { reactive } from 'vue'
+<script setup>
+import { ref, defineProps, computed } from 'vue'
+import { Chart, Grid, Line } from 'vue3-charts'
 
-export default {
-  name: 'NPVForm',
-  props: {
+const props = defineProps({
     netPresentValueResults: {
         type: Object
     }
-  },
-  setup(){
-      const form = reactive({
-        lowerBoundDiscountRate: 0,
-        upperBoundDiscountRate: 0,
-        discountRateIncrement: 0,
-        years: 0,
-        initialInvestment: 0
-      })
-      let index = 0
-      return { form }
-  }
-}
+})
+console.log(props.netPresentValueResults.arrangedChartData)
+const direction = ref('horizontal')
+const margin = ref({
+    left: 0,
+    top: 20,
+    right: 20,
+    bottom: 0
+})
+
 </script>
 
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style>
+  svg-icon svg { width: 90px;background: khaki;cursor: pointer }
+  svg-icon:hover path { stroke: black }
 </style>
