@@ -1,7 +1,7 @@
 export default {
   chart: {
       height: 350,
-      type: 'line',
+      type: 'column',
       stacked: false
   },
   dataLabels: {
@@ -44,7 +44,7 @@ export default {
     }
   },
   {
-    seriesName: 'Present Values',
+    seriesName: 'Present Value',
     opposite: true,
     axisTicks: {
       show: true,

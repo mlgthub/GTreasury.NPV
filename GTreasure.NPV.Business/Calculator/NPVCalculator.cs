@@ -12,7 +12,7 @@ namespace GTreasure.NPV.Service.Calculator
         public NetPresentValueResultModel CalculateNPV(NetPresentValueCalculationModel details)
         {
             NetPresentValueResultModel result = new (details.Years);
-            var annualRates = GetCalculatedAnnualRates(details.LowerBoundDiscountRate,
+            result.DiscountRates = GetCalculatedAnnualRates(details.LowerBoundDiscountRate,
                                 details.UpperBoundDiscountRate,
                                 details.IncrementalRate,
                                 details.Years);
@@ -20,13 +20,12 @@ namespace GTreasure.NPV.Service.Calculator
             for (int i = 0; i < details.Years; i++)
             {
                 result.PresentValues[i] = CalculatePVforYearX(
-                    annualRates[i],
+                    result.DiscountRates[i],
                     details.AnnualCashFlows[i],
                     i+1);
             }
 
-            result.TotalCashInflow = result.PresentValues.Sum();
-            result.NetPresentValue = result.TotalCashInflow - details.InitialInvestment;
+            result.NetPresentValue = result.PresentValues.Sum() - details.InitialInvestment;
 
             return result;
         }

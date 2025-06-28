@@ -18,7 +18,7 @@
         /// </summary>
         public decimal UpperBoundDiscountRate { get; set; }
         /// <summary>
-        /// The Incremental Rate per annum, 0.95% is defined  as 0.0095
+        /// The Incremental Rate per annum, 0.95% is defined as 0.0095
         /// </summary>
         public decimal IncrementalRate { get; set; }
         /// <summary>

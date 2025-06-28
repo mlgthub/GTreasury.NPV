@@ -5,26 +5,21 @@
 </template>
 
 <script setup>
-import { defineProps, toRefs } from 'vue'
+import { defineProps, reactive } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
-import apexNPVChartOptions from '../schemas/apexNPVChartOptions.js'
-import apexNPVChartSeries from '../schemas/apexNPVChartSeries.js'
 
 const props = defineProps({
-    netPresentValueResults: {
+    chartOptions: {
         type: Object
+    },
+    series: {
+        type: Array
     }
 })
 
-// const internalProps = toRefs(props)
+console.log(props.chartOptions)
+console.log(props.series)
 
-const chartOptions = apexNPVChartOptions;
-// chartOptions.title += internalProps.netPresentValueResults.netPresentValue
-
-const series = apexNPVChartSeries
+const copiedProps = reactive({ ...props })  
 
 </script>
-
-<style>
-
-</style>

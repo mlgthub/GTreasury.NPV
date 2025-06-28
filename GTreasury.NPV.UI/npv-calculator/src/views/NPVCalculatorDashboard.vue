@@ -7,14 +7,9 @@
             v-if="renderKey"
             :key="renderKey"
             id="npvChart"
-            :netPresentValueResults="chartResults"
+            :chartOptions="chartOptions"
+            :series="series"
         />
-        <!-- <NPVChart
-            v-if="renderKey"
-            :key="renderKey"
-            id="npvChart"
-            :netPresentValueResults="chartResults"
-        /> -->
     </div>
 </template>
 
@@ -22,39 +17,59 @@
 import { nextTick, ref } from 'vue'
 import NPVForm from '../components/NPVForm.vue'
 import NPVApexChart from '../components/NPVApexChart.vue'
+import apexNPVChartOptions from '../schemas/apexNPVChartOptions.js'
+import apexNPVChartSeries from '../schemas/apexNPVChartSeries.js'
 
-let chartResults
 const renderKey = ref(0)
+const chartOptions = apexNPVChartOptions
+const series = apexNPVChartSeries
+let chartResults
 
 const receiveNPVResultFromForm = (data) => {
+    chartResults = {}
     chartResults = data
-    chartResults.arrangedChartData = arrangeChartData(data.presentValues)
-    forceRerender();
+    arrangeChartData()
+    forceRerender()
 }
 
-function arrangeChartData(presentValues) {
-    const chartData = {
-        labels: [],
-        datasets: [
-            {
-                label: 'Present Value',
-                backgroundColor: '#f87979',
-                data: []
-            }
-        ]
+
+async function arrangeChartData() {
+    await updateNPVTitle()
+    await updateXAxisByYears()
+    await updateChartSeries()
+}
+
+async function updateNPVTitle () {
+    if (chartResults.netPresentValue < 0) {
+        const positiveValue = chartResults.netPresentValue * -1
+        chartOptions.title.text = 'NPV: -$' + positiveValue
+    } else {
+        chartOptions.title.text = 'NPV: $' + chartResults.netPresentValue
+    }  
+}
+
+async function updateXAxisByYears () {
+    const yearNow = new Date().getFullYear()
+    chartOptions.xaxis.categories = []
+    for (let i = 1; i <= chartResults.presentValues.length; i++) {
+        chartOptions.xaxis.categories.push(yearNow + i)
     }
-    chartData.datasets[0].data = presentValues
-    for (let i = 1; i <= presentValues.length;) {
-        chartData.labels.push(`Year ${i++}`)
+}
+
+async function updateChartSeries () {
+    series[0].data = []
+    series[1].data = []
+    for (let i = 0; i < chartResults.presentValues.length; i++) {
+        series[0].data.push(chartResults.discountPercentages[i])
+        series[1].data.push(chartResults.presentValues[i])
     }
-    return chartData
 }
 
 async function forceRerender() {
     await nextTick()
-    console.log(chartResults.arrangedChartData)
-    renderKey.value += 1;
+    renderKey.value += 1
 }
+
 </script>
 
 <style>

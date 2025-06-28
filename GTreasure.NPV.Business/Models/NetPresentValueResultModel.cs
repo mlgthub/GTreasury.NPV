@@ -12,15 +12,16 @@
         public NetPresentValueResultModel(int length)
         {
             PresentValues = new decimal[length];
+            DiscountRates = new decimal[length];
         }
         /// <summary>
         /// The calculated Present Values per annum, index 0 as year 1 and so on.
         /// </summary>
         public decimal[] PresentValues { get; set; }
         /// <summary>
-        /// The sum of the Present Values / Cash Inflows
+        /// The calculated Discount Rates per annum, index 0 as year 1 and so on. 2.95% is defined as 0.0295
         /// </summary>
-        public decimal TotalCashInflow { get; set; }
+        public decimal[] DiscountRates { get; set; }
         /// <summary>
         /// The Net Present Value
         /// </summary>

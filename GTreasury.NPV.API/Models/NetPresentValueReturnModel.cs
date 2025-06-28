@@ -10,9 +10,9 @@
         /// </summary>
         public decimal[] PresentValues { get; set; } = Array.Empty<decimal>();
         /// <summary>
-        /// The sum of the Present Values / Cash Inflows
+        /// The calculated Discount Percentages per annum, index 0 as year 1 and so on. 2.95% is defined as 2.95
         /// </summary>
-        public decimal TotalCashInflow { get; set; }
+        public decimal[] DiscountPercentages { get; set; } = Array.Empty<decimal>();
         /// <summary>
         /// The Net Present Value
         /// </summary>
