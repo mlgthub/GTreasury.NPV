@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { defineProps, reactive } from 'vue'
+import { defineProps } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 
 const props = defineProps({
@@ -16,10 +16,5 @@ const props = defineProps({
         type: Array
     }
 })
-
-console.log(props.chartOptions)
-console.log(props.series)
-
-const copiedProps = reactive({ ...props })  
 
 </script>
