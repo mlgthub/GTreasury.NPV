@@ -5,9 +5,14 @@ export default [
         group: "discount-rate",
         data: []
     }, {
+        name: 'Predicted Cashflow',
+        type: 'column',
+        group: "cash-flows",
+        data: []
+    }, {
         name: 'Present Value',
         type: 'column',
-        group: "present-value",
+        group: "cash-flows",
         data: []
     }
 ]

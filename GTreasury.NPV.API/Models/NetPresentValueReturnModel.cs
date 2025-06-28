@@ -17,5 +17,13 @@
         /// The Net Present Value
         /// </summary>
         public decimal NetPresentValue { get; set; }
+        /// <summary>
+        /// The Initial Investment.
+        /// </summary>
+        public decimal InitialInvestment { get; set; }
+        /// <summary>
+        /// The Net Cash Flows during each period, index 0 as year 1 and so on.
+        /// </summary>
+        public decimal[] AnnualCashFlows { get; set; } = Array.Empty<decimal>();
     }
 }

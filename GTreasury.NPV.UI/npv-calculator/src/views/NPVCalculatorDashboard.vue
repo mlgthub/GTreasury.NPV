@@ -17,52 +17,21 @@
 import { nextTick, ref } from 'vue'
 import NPVForm from '../components/NPVForm.vue'
 import NPVApexChart from '../components/NPVApexChart.vue'
-import apexNPVChartOptions from '../schemas/apexNPVChartOptions.js'
-import apexNPVChartSeries from '../schemas/apexNPVChartSeries.js'
+import { prepareChartData } from '../scripts/arrangeChartData.js'
 
 const renderKey = ref(0)
-const chartOptions = apexNPVChartOptions
-const series = apexNPVChartSeries
-let chartResults
+let chartOptions
+let series
 
 const receiveNPVResultFromForm = (data) => {
-    chartResults = {}
-    chartResults = data
-    arrangeChartData()
+    consumeExportedData(data)
+}
+
+async function consumeExportedData(chartResults){
+    const result = await prepareChartData(chartResults)
+    chartOptions = result.optionsData
+    series = result.seriesData
     forceRerender()
-}
-
-
-async function arrangeChartData() {
-    await updateNPVTitle()
-    await updateXAxisByYears()
-    await updateChartSeries()
-}
-
-async function updateNPVTitle () {
-    if (chartResults.netPresentValue < 0) {
-        const positiveValue = chartResults.netPresentValue * -1
-        chartOptions.title.text = 'NPV: -$' + positiveValue
-    } else {
-        chartOptions.title.text = 'NPV: $' + chartResults.netPresentValue
-    }  
-}
-
-async function updateXAxisByYears () {
-    const yearNow = new Date().getFullYear()
-    chartOptions.xaxis.categories = []
-    for (let i = 1; i <= chartResults.presentValues.length; i++) {
-        chartOptions.xaxis.categories.push(yearNow + i)
-    }
-}
-
-async function updateChartSeries () {
-    series[0].data = []
-    series[1].data = []
-    for (let i = 0; i < chartResults.presentValues.length; i++) {
-        series[0].data.push(chartResults.discountPercentages[i])
-        series[1].data.push(chartResults.presentValues[i])
-    }
 }
 
 async function forceRerender() {

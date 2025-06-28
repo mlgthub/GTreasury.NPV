@@ -30,7 +30,10 @@ public class NetPresentValueController : ControllerBase
         try
         {
             var result = _npvCalculator.CalculateNPV(_mapper.Map<NetPresentValueCalculationModel>(requestModel));
-            return Ok(_mapper.Map<NetPresentValueReturnModel>(result));
+            var retModel = _mapper.Map<NetPresentValueReturnModel>(result);
+            retModel.AnnualCashFlows = requestModel.AnnualCashFlows;
+            retModel.InitialInvestment = requestModel.InitialInvestment;
+            return Ok(retModel);
         }
         catch (Exception e)
         {

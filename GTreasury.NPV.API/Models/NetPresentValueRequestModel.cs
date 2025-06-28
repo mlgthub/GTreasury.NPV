@@ -19,14 +19,9 @@
         /// </summary>
         public decimal IncrementalPercentage { get; set; }
         /// <summary>
-        /// The fixed cash flow for the entire time period. If this is present,
-        /// then the <see cref="NetPresentValueRequestModel.AnnualCashFlows"/> will be ignored.
-        /// </summary>
-        public decimal? FixedCashFlow { get; set; }
-        /// <summary>
         /// The Net Cash Flows during each period, index 0 as year 1 and so on.
         /// </summary>
-        public decimal[]? AnnualCashFlows { get; set; }
+        public decimal[] AnnualCashFlows { get; set; } = Array.Empty<decimal>();
         /// <summary>
         /// The years represent the time period of the NPV
         /// </summary>

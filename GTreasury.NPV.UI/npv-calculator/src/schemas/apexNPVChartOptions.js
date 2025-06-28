@@ -44,6 +44,28 @@ export default {
     }
   },
   {
+    seriesName: 'Predicted Cashflow',
+    opposite: true,
+    axisTicks: {
+      show: true,
+    },
+    axisBorder: {
+      show: true,
+      color: '#00E396'
+    },
+    labels: {
+      style: {
+        colors: '#00E396',
+      }
+    },
+    title: {
+      text: "Predicted Cashflow",
+      style: {
+        color: '#00E396',
+      }
+    },
+  },
+  {
     seriesName: 'Present Value',
     opposite: true,
     axisTicks: {
