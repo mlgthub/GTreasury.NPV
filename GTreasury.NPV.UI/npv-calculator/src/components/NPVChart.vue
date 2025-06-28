@@ -21,7 +21,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
-import { ref, defineProps, computed } from 'vue'
+import { defineProps } from 'vue'
 import { Line } from 'vue-chartjs'
 
 ChartJS.register(
